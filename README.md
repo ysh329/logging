@@ -22,6 +22,15 @@ LOG(FATAL)
 VLOG(0~9): enable by `export GLOG_v=<GLOG_v_number>` in command line.
 ```
 
+## Build
+
+```shell
+./make.sh
+
+# run
+./logging
+```
+
 ## Others
 
 using `fprintf(stderr)` not `std::cerr`: NDK not supported (segfault).
