@@ -22,6 +22,7 @@ build_profile(){
     mkdir -p "${generationDir}"
     cd "${generationDir}"
     cmake \
+        -DENABLE_NDEBUG=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_TOOLCHAIN_FILE=${ndkRoot}/build/cmake/android.toolchain.cmake \
         -DANDROID_ABI=${abi} \
