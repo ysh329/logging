@@ -14,8 +14,6 @@
 #include <sstream>
 #include <string>
 
-// NOLINTFILE()
-
 // LOG()
 #define LOG(status) LOG_##status.stream()
 #define LOG_ERROR LOG_INFO
@@ -28,7 +26,12 @@
 
 // CHECK()
 // clang-format off
+#ifdef NDEBUG
+#define CHECK(x) LogMessage(__FILE__, __FUNCTION__, __LINE__).stream()
+#else // NDEBUG
 #define CHECK(x) if (!(x)) LogMessageFatal(__FILE__, __FUNCTION__, __LINE__).stream() << "Check failed: " #x << ": " // NOLINT(*)
+#endif // NDEBUG
+
 // clang-format on
 #define CHECK_EQ(x, y) _CHECK_BINARY(x, ==, y)
 #define CHECK_NE(x, y) _CHECK_BINARY(x, !=, y)
@@ -68,6 +71,10 @@ void gen_log(std::ostream& log_stream_, const char* file, const char* func, int 
 // LogMessage
 class LogMessage {
  public:
+#ifdef NDEBUG
+  LogMessage(...) { }
+  std::ostream& stream() { return log_stream_; }
+#else
   LogMessage(const char* file, const char* func,
              int lineno, const char* level="I")  {
     gen_log(log_stream_, file, func, lineno, level);
@@ -79,7 +86,7 @@ class LogMessage {
   }
 
   std::ostream& stream() { return log_stream_; }
-
+#endif // NDEBUG
  protected:
   std::stringstream log_stream_;
   LogMessage(const LogMessage&) = delete;
@@ -90,6 +97,11 @@ class LogMessage {
 // LogMessageFatal
 class LogMessageFatal : public LogMessage {
  public:
+#ifdef NDEBUG
+  LogMessageFatal(...)
+      : LogMessage() {}
+  std::ostream& stream() { return log_stream_; }
+#else
   LogMessageFatal(const char* file, const char* func,
                   int lineno, const char* level="F") 
       : LogMessage(file, func, lineno, level) {}
@@ -99,12 +111,17 @@ class LogMessageFatal : public LogMessage {
     fprintf(stderr, "%s", log_stream_.str().c_str());
     abort();
   }
+#endif // NDEBUG
 };
 
 
 // VLOG
 class VLogMessage {
  public:
+#ifdef NDEBUG
+  VLogMessage(...) {}
+  std::ostream& stream() { return log_stream_; }
+#else
   VLogMessage(const char* file, const char* func,
                   int lineno, const int32_t level_int=0) {
     const char* GLOG_v = std::getenv("GLOG_v");
@@ -125,7 +142,7 @@ class VLogMessage {
     fprintf(stderr, "%s", log_stream_.str().c_str());
   }
   std::ostream& stream() { return log_stream_; }
-
+#endif // NDEBUG
  protected:
   std::stringstream log_stream_;
   int32_t GLOG_v_int;
@@ -133,7 +150,6 @@ class VLogMessage {
 
   VLogMessage(const VLogMessage&) = delete;
   void operator=(const VLogMessage&) = delete;
-
 };
 
 
