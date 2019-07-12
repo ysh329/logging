@@ -22,13 +22,10 @@ LOG(FATAL)
 VLOG(0~9): enable by `export GLOG_v=<GLOG_v_number>` in command line.
 ```
 
-## Build
+## Support macro
 
-```shell
-./make.sh
-
-# run
-./logging
+```
+NDEBUG: if defined, disable all CHECK and LOG informations.
 ```
 
 ## Others
