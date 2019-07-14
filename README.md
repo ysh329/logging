@@ -31,3 +31,8 @@ NDEBUG: if defined, disable all CHECK and LOG informations.
 ## Others
 
 using `fprintf(stderr)` not `std::cerr`: NDK not supported (segfault).
+
+## Reference
+
+- [How To Use Google Logging Library (glog)](http://rpg.ifi.uzh.ch/docs/glog.html)
+- [Writing Cpp Macros](http://www.ebyte.it/library/codesnippets/WritingCppMacros.html)
