@@ -1,6 +1,6 @@
 # logging
 
-light-weight logging for mobile.
+A light-weight C++ logging for mobile.
 
 
 ## Support functions
